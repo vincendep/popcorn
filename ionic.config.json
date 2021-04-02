@@ -1,0 +1,7 @@
+{
+  "name": "popcorn",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
