@@ -1,0 +1,89 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>movie-detail</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div *ngIf="movie$ | async as movie; else loading">
+    <!-- add image placeholder-->
+    <ion-img [src]="('https://image.tmdb.org/t/p/w500')+(movie.backdrop_path)"></ion-img>
+    <div>
+      <h1>{{ movie.title }}</h1>
+      <p>{{ movie.release_date | date:'YYYY' }} | {{ movie.runtime }}m | {{ movie.vote_average | percentage }}%</p>
+    </div>
+    <div>
+      <h2>Overview</h2>
+      <p>{{ movie.overview }}</p>
+    </div>
+    <div *ngIf="watchProviders$ | async as watchProviders">
+      <h2>Watch on</h2>
+        <ion-segment class="ion-margin-bottom" #watchProviderSegment value="flatrate">
+          <ion-segment-button *ngIf="watchProviders.flatrate && watchProviders.flatrate.length > 0" value="flatrate">
+            <ion-label>Flat</ion-label>
+          </ion-segment-button>
+          <ion-segment-button *ngIf="watchProviders.rent && watchProviders.rent.length > 0" value="rent">
+            <ion-label>Rent</ion-label>
+          </ion-segment-button>
+          <ion-segment-button *ngIf="watchProviders.buy && watchProviders.buy.length > 0" value="buy">
+            <ion-label>Buy</ion-label>
+          </ion-segment-button>
+        </ion-segment>
+        <div style="display: flex;" *ngIf="watchProviderSegment.value === 'flatrate'">
+          <ion-thumbnail class="ion-margin-end" *ngFor="let provider of watchProviders.flatrate">
+            <img [src]="('https://image.tmdb.org/t/p/w500')+(provider.logo_path)">
+          </ion-thumbnail>
+        </div>
+        <div style="display: flex;"  *ngIf="watchProviderSegment.value === 'rent'">
+          <ion-thumbnail class="ion-margin-end" *ngFor="let provider of watchProviders.rent">
+            <img [src]="('https://image.tmdb.org/t/p/w500')+(provider.logo_path)">
+          </ion-thumbnail>
+        </div>
+        <div style="display: flex;"  *ngIf="watchProviderSegment.value === 'buy'">
+          <ion-thumbnail class="ion-margin-end" *ngFor="let provider of watchProviders.buy">
+            <img [src]="('https://image.tmdb.org/t/p/w500')+(provider.logo_path)">
+          </ion-thumbnail>
+        </div>
+    </div>
+    <div>
+      <h2>Cast</h2>
+      <ion-slides *ngIf="cast$ | async as cast; else loading" [options]="cSlideOpts">
+        <ion-slide *ngFor="let actor of cast">
+          <ion-card>
+            <ion-img [src]="('https://image.tmdb.org/t/p/w500')+(actor.profile_path)"></ion-img>
+            <ion-card-header>
+              <ion-card-title>{{ actor.name }}</ion-card-title>
+              <ion-card-subtitle>{{ actor.character }}</ion-card-subtitle>
+            </ion-card-header>
+          </ion-card>
+        </ion-slide>
+      </ion-slides>
+    </div>
+    <div>
+      <h2>Director</h2>
+      <ion-card style="width: 75px;" *ngIf="director$ | async as director; else loading">
+        <ion-img [src]="('https://image.tmdb.org/t/p/w500')+(director.profile_path)"></ion-img>
+        <ion-card-header>
+          <ion-card-title>{{ director.name }}</ion-card-title>
+        </ion-card-header>
+      </ion-card>
+    </div>
+    <div>
+      <h2>Recommended movies</h2>
+      <ion-slides *ngIf="recommendedMovies$ | async as recommendedMovies; else loading" [options]="mSlideOpts">
+        <ion-slide *ngFor="let movie of recommendedMovies">
+          <ion-card>
+            <ion-img [src]="('https://image.tmdb.org/t/p/w500')+(movie.poster_path)"></ion-img>
+            <ion-card-header>
+              <ion-card-title>{{ movie.title }}</ion-card-title>
+            </ion-card-header>
+          </ion-card>
+        </ion-slide>
+      </ion-slides>
+    </div>
+  </div>
+
+  <ng-template #loading>
+    Loading
+  </ng-template>
+</ion-content>

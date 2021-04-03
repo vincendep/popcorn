@@ -43,6 +43,24 @@ export class TmdbService {
     })
   }
 
+  getMovieRecommendations(id: Number, page: Number = 1) {
+    const path = `movie/${id}/recommendations`
+    return this.http.get(this.buildUrl(path), {
+      params: {
+        api_key: this.apiKey
+      }
+    })
+  }
+
+  getMovieWatchProviders(id: Number) {
+    const path = `movie/${id}/watch/providers`
+    return this.http.get(this.buildUrl(path), {
+      params: {
+        api_key: this.apiKey
+      }
+    })
+  }
+
   private buildUrl(path: String) {
     return this.baseUrl + "/" + path
   }
