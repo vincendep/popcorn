@@ -9,6 +9,7 @@ export class TmdbService {
 
   private apiKey = environment.TMDB_API_KEY
   private baseUrl = "https://api.themoviedb.org/3"
+  private imageBaseUrl = "https://image.tmdb.org/t/p"
   private defaultExternalSource = "imdb_id"
 
   constructor(
@@ -59,6 +60,10 @@ export class TmdbService {
         api_key: this.apiKey
       }
     })
+  }
+
+  getImageUrl(path: string, size: string = 'original') {
+    return this.imageBaseUrl + "/" + size + path;
   }
 
   private buildUrl(path: String) {
