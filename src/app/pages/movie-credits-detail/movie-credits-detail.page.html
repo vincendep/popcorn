@@ -1,0 +1,30 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>movie-credits-detail</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismiss()">Close</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <h2>Director</h2>
+  <ion-row *ngIf="directors" class="ion-wrap">
+    <ion-card style="width: 30%;" *ngFor="let director of directors">
+      <ion-img [src]="getImageUrl(director.profile_path)"></ion-img>
+      <ion-card-header>
+        <ion-card-subtitle>{{ director.name }}</ion-card-subtitle>
+      </ion-card-header>
+    </ion-card>
+  </ion-row>
+  <h2>Cast</h2>
+  <ion-row *ngIf="cast" class="ion-wrap">
+    <ion-card style="width: 25%;" *ngFor="let actor of cast">
+      <ion-img [src]="getImageUrl(actor.profile_path)"></ion-img>
+      <ion-card-header>
+        <ion-card-subtitle>{{ actor.name }}</ion-card-subtitle>
+        <ion-card-subtitle>{{ actor.character }}</ion-card-subtitle>
+      </ion-card-header>
+    </ion-card>
+  </ion-row>
+</ion-content>
