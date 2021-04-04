@@ -8,6 +8,7 @@ import { MovieDetailPageRoutingModule } from './movie-detail-routing.module';
 
 import { MovieDetailPage } from './movie-detail.page';
 import { PipesModule } from 'src/app/pipes/pipes.module';
+import { MovieCreditsDetailPage } from '../movie-credits-detail/movie-credits-detail.page';
 
 @NgModule({
   imports: [
@@ -17,6 +18,6 @@ import { PipesModule } from 'src/app/pipes/pipes.module';
     PipesModule,
     MovieDetailPageRoutingModule
   ],
-  declarations: [MovieDetailPage]
+  declarations: [MovieDetailPage, MovieCreditsDetailPage]
 })
 export class MovieDetailPageModule {}
