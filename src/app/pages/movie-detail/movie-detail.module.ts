@@ -6,9 +6,9 @@ import { IonicModule } from '@ionic/angular';
 
 import { MovieDetailPageRoutingModule } from './movie-detail-routing.module';
 
-import { MovieDetailPage } from './movie-detail.page';
 import { PipesModule } from 'src/app/pipes/pipes.module';
-import { MovieCreditsDetailPage } from '../movie-credits-detail/movie-credits-detail.page';
+import { MovieCreditsDetailPageModule } from '../movie-credits-detail/movie-credits-detail.module';
+import { MovieDetailPage } from './movie-detail.page';
 
 @NgModule({
   imports: [
@@ -16,8 +16,9 @@ import { MovieCreditsDetailPage } from '../movie-credits-detail/movie-credits-de
     FormsModule,
     IonicModule,
     PipesModule,
-    MovieDetailPageRoutingModule
+    MovieDetailPageRoutingModule,
+    MovieCreditsDetailPageModule
   ],
-  declarations: [MovieDetailPage, MovieCreditsDetailPage]
+  declarations: [MovieDetailPage]
 })
 export class MovieDetailPageModule {}

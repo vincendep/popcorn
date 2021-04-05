@@ -3,7 +3,7 @@ import { ModalController } from '@ionic/angular';
 import { TmdbService } from 'src/app/services/tmdb.service';
 
 @Component({
-  selector: 'movie-credits-detail',
+  selector: 'app-movie-credits-detail',
   templateUrl: './movie-credits-detail.page.html',
   styleUrls: ['./movie-credits-detail.page.scss'],
 })
