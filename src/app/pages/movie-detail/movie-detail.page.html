@@ -10,7 +10,7 @@
     <ion-img [src]="getImageUrl(movie.backdrop_path)"></ion-img>
     <div>
       <h1>{{ movie.title }}</h1>
-      <p>{{ movie.release_date | date:'YYYY' }} | {{ movie.runtime }}m | {{ movie.vote_average | percentage }}%</p>
+      <p>{{ movie.release_date | date:'YYYY' }} | {{ movie.runtime }}m | {{ movie.vote_average / 10 | percent }}</p>
     </div>
     <div>
       <h2>Overview</h2>
