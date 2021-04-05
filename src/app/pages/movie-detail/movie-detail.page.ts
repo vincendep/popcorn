@@ -20,8 +20,6 @@ export class MovieDetailPage implements OnInit {
   private cast
   private recommendedMovies$
 
-  private subscription: Subscription
-
   constructor(
     private route: ActivatedRoute,
     private modalController: ModalController,
@@ -37,15 +35,11 @@ export class MovieDetailPage implements OnInit {
     this.watchProviders$ = this.tmdb.getMovieWatchProviders(movieId)
       .pipe(
         map((res: any) => res.results["IT"]))
-    this.subscription = this.tmdb.getMovieCredits(movieId)
+    this.tmdb.getMovieCredits(movieId)
       .pipe(
         tap((credits: any) => this.cast = credits.cast.slice(0, 25)),
         tap((credits: any) => this.directors = credits.crew.filter(person => person.job === "Director")))
       .subscribe()
-  }
-
-  ngOnDestroy() {
-    this.subscription.unsubscribe()
   }
 
   getImageUrl(path: string) {
