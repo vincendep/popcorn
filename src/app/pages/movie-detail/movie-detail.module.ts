@@ -6,7 +6,6 @@ import { IonicModule } from '@ionic/angular';
 
 import { MovieDetailPageRoutingModule } from './movie-detail-routing.module';
 
-import { PipesModule } from 'src/app/pipes/pipes.module';
 import { MovieCreditsDetailPageModule } from '../movie-credits-detail/movie-credits-detail.module';
 import { MovieDetailPage } from './movie-detail.page';
 
@@ -15,7 +14,6 @@ import { MovieDetailPage } from './movie-detail.page';
     CommonModule,
     FormsModule,
     IonicModule,
-    PipesModule,
     MovieDetailPageRoutingModule,
     MovieCreditsDetailPageModule
   ],
