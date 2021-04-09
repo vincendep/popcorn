@@ -1,0 +1,21 @@
+<ion-header>
+    <ion-toolbar>
+      <ion-title>List</ion-title>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-slides *ngIf="list$ | async as lists; else loading" [options]="{slidesPerView: 3}">
+    <ion-slide *ngFor="let list of lists">
+      <ion-card [href]="'list/' + list.id">
+        <ion-img [src]="getImageUrl(list.poster_path)"></ion-img>
+        <ion-card-header>
+          <ion-card-title>{{ list.description }}</ion-card-title>
+        </ion-card-header>
+      </ion-card>
+    </ion-slide>
+  </ion-slides>
+  <ng-template #loading>
+    Loading
+  </ng-template>
+</ion-content>

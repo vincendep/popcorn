@@ -20,6 +20,10 @@ const routes: Routes = [
         loadChildren: () => import('../movie-detail/movie-detail.module').then( m => m.MovieDetailPageModule)
       },
       {
+        path: 'list',
+        loadChildren: () => import('../list/list.module').then (m => m.ListPageModule)
+      },
+      {
         path: '',
         redirectTo: '/discover',
         pathMatch: 'full'
