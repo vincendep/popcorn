@@ -20,7 +20,7 @@ export class MovieCreditsDetailPage implements OnInit {
   ngOnInit() {}
 
   getImageUrl(path: string) {
-    return this.tmdb.getImageUrl(path)
+    return this.tmdb.getImage(path)
   }
 
   dismiss() {

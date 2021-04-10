@@ -1,23 +1,25 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { of } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+import { map, tap } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
+
+import { Movie } from '../models/domain/movie';
+import { Page } from '../models/page';
+import { TmdbMovie } from '../models/tmdb/tmdb-movie';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TmdbService {
-
   private apiKey = environment.TMDB_API_KEY
   private baseUrl = "https://api.themoviedb.org/3"
   private imageBaseUrl = "https://image.tmdb.org/t/p"
+  private movieGenresCache = {}
 
-  constructor(
-    private http: HttpClient
-  ) { }
+  constructor(private http: HttpClient) {}
 
-  discoverMovie(filter: {genres?: string, keywords?: string, watchProviders?: string} ) {
+  discoverMovie(filter: {genres?: string, keywords?: string, watchProviders?: string}) {
     const path = 'discover/movie'
     return this.http.get(this.buildUrl(path), {
       params: {
@@ -29,7 +31,7 @@ export class TmdbService {
     })
   }
 
-  find(id: string, externalSource: string = "imdb_id") {
+  find(id: string, externalSource: string = "imdb_id"): any {
     const path = `find/${id}`
     return this.http.get(this.buildUrl(path), {
       params: {
@@ -37,6 +39,10 @@ export class TmdbService {
         external_source: externalSource
       }
     })
+  }
+
+  getImage(path: string, size: string = 'original'): string {
+    return this.imageBaseUrl + "/" + size + path
   }
 
   getMovieCredits(id: Number) {
@@ -48,16 +54,14 @@ export class TmdbService {
     })
   }
 
-  getMovieDetails(id: Number) {
+  getMovieDetails(id: Number): Observable<TmdbMovie> {
     const path = `movie/${id}`
     return this.http.get(this.buildUrl(path), {
       params: {
         api_key: this.apiKey
       }
-    })
+    }).pipe(map(res => new TmdbMovie(res, this)))
   }
-
-  private movieGenresCache = {}
 
   getMovieGenresList(language: string = 'en-US') {
     if (this.movieGenresCache[language]) {
@@ -75,13 +79,18 @@ export class TmdbService {
     }
   }
 
-  getMovieRecommendations(id: Number, page: Number = 1) {
+  getMovieRecommendations(id: number, page: number = 1): Observable<Page<TmdbMovie>> {
     const path = `movie/${id}/recommendations`
     return this.http.get(this.buildUrl(path), {
       params: {
         api_key: this.apiKey
       }
-    })
+    }).pipe(
+        map((res: any) => new Page<TmdbMovie>(
+          res.page,
+          res.total_pages,
+          res.total_results,
+          res.results.map((movie: any) => new TmdbMovie(movie, this)))))
   }
 
   getMovieWatchProviders(id: Number) {
@@ -91,10 +100,6 @@ export class TmdbService {
         api_key: this.apiKey
       }
     })
-  }
-
-  getImageUrl(path: string, size: string = 'original') {
-    return this.imageBaseUrl + "/" + size + path;
   }
 
   private buildUrl(path: String) {

@@ -5,6 +5,8 @@ import { TmdbService } from 'src/app/services/tmdb.service';
 import { Observable, Subscription } from 'rxjs';
 import { tap, map, filter } from 'rxjs/operators';
 import { MovieCreditsDetailPage } from '../movie-credits-detail/movie-credits-detail.page';
+import { Movie } from 'src/app/models/domain/movie';
+import { Page } from 'src/app/models/page';
 
 @Component({
   selector: 'app-movie-detail',
@@ -13,12 +15,12 @@ import { MovieCreditsDetailPage } from '../movie-credits-detail/movie-credits-de
 })
 export class MovieDetailPage implements OnInit {
 
-  private movie$
+  private movie$: Observable<Movie>
   private movieCredits$
   private watchProviders$
   private directors
   private cast
-  private recommendedMovies$
+  private recommendedMovies$: Observable<Page<Movie>>
 
   constructor(
     private route: ActivatedRoute,
@@ -29,9 +31,7 @@ export class MovieDetailPage implements OnInit {
   ngOnInit() {
     const movieId = +this.route.snapshot.paramMap.get("id");
     this.movie$ = this.tmdb.getMovieDetails(movieId)
-    this.recommendedMovies$ = this.tmdb.getMovieRecommendations(movieId)
-      .pipe(
-        map((res: any) => res.results))
+    this.recommendedMovies$ = this.tmdb.getMovieRecommendations(movieId).pipe(tap(res => console.log(res)))
     this.watchProviders$ = this.tmdb.getMovieWatchProviders(movieId)
       .pipe(
         map((res: any) => res.results["IT"]))
@@ -40,10 +40,6 @@ export class MovieDetailPage implements OnInit {
         tap((credits: any) => this.cast = credits.cast.slice(0, 25)),
         tap((credits: any) => this.directors = credits.crew.filter(person => person.job === "Director")))
       .subscribe()
-  }
-
-  getImageUrl(path: string) {
-    return this.tmdb.getImageUrl(path)
   }
 
   async showMovieCredits() {
