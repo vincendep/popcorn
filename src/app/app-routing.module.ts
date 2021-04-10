@@ -14,7 +14,7 @@ const routes: Routes = [
       routes,
       {
         preloadingStrategy: PreloadAllModules,
-        enableTracing: ! environment.production
+        enableTracing: false
       })
   ],
   exports: [RouterModule]
