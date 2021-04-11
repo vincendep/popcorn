@@ -1,4 +1,5 @@
-import { TmdbService } from "src/app/services/tmdb.service";
+import { TmdbMovieService } from "src/app/services/tmdb/tmdb-movie.service";
+import { TmdbWatchProviderService } from "src/app/services/tmdb/tmdb-watch-provider.service";
 import { WatchProvider } from "../domain/watch-provider";
 
 export class TmdbWatchProvider implements WatchProvider {
@@ -7,9 +8,9 @@ export class TmdbWatchProvider implements WatchProvider {
   private logo_path: string;
   private display_priority: number;
 
-  private tmdb: TmdbService
+  private tmdb: TmdbWatchProviderService
 
-  constructor(object: any, tmdb: TmdbService) {
+  constructor(object: any, tmdb: TmdbWatchProviderService) {
     this.id = object.id
     this.name = object.name
     this.logo_path = object.logo_path

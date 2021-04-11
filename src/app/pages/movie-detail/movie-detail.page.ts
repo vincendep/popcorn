@@ -1,12 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ModalController } from '@ionic/angular';
-import { TmdbService } from 'src/app/services/tmdb.service';
+import { TmdbMovieService } from 'src/app/services/tmdb/tmdb-movie.service';
 import { Observable, Subscription } from 'rxjs';
 import { tap, map, filter } from 'rxjs/operators';
 import { MovieCreditsDetailPage } from '../movie-credits-detail/movie-credits-detail.page';
 import { Movie } from 'src/app/models/domain/movie';
 import { Page } from 'src/app/models/page';
+import { MovieWatchProviders, WatchProvider } from 'src/app/models/domain/watch-provider';
+import { TmdbWatchProviderService } from 'src/app/services/tmdb/tmdb-watch-provider.service';
 
 @Component({
   selector: 'app-movie-detail',
@@ -16,26 +18,25 @@ import { Page } from 'src/app/models/page';
 export class MovieDetailPage implements OnInit {
 
   private movie$: Observable<Movie>
+  private watchProviders$: Observable<MovieWatchProviders>
+  private recommendedMovies$: Observable<Page<Movie>>
   private movieCredits$
-  private watchProviders$
   private directors
   private cast
-  private recommendedMovies$: Observable<Page<Movie>>
 
   constructor(
     private route: ActivatedRoute,
     private modalController: ModalController,
-    private tmdb: TmdbService
+    private movieService: TmdbMovieService,
+    private watchProviderService: TmdbWatchProviderService
   ) { }
 
   ngOnInit() {
     const movieId = +this.route.snapshot.paramMap.get("id");
-    this.movie$ = this.tmdb.getMovieDetails(movieId)
-    this.recommendedMovies$ = this.tmdb.getMovieRecommendations(movieId).pipe(tap(res => console.log(res)))
-    this.watchProviders$ = this.tmdb.getMovieWatchProviders(movieId)
-      .pipe(
-        map((res: any) => res.results["IT"]))
-    this.tmdb.getMovieCredits(movieId)
+    this.movie$ = this.movieService.getMovieDetails(movieId)
+    this.recommendedMovies$ = this.movieService.getMovieRecommendations(movieId)
+    this.watchProviders$ = this.watchProviderService.getMovieWatchProviders(movieId)
+    this.movieService.getMovieCredits(movieId)
       .pipe(
         tap((credits: any) => this.cast = credits.cast.slice(0, 25)),
         tap((credits: any) => this.directors = credits.crew.filter(person => person.job === "Director")))

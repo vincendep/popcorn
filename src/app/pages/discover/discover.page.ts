@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { TmdbService } from 'src/app/services/tmdb.service';
+import { TmdbMovieService } from 'src/app/services/tmdb/tmdb-movie.service';
 
 @Component({
   selector: 'app-discover-page',
@@ -9,7 +9,7 @@ import { TmdbService } from 'src/app/services/tmdb.service';
 export class DiscoverPage implements OnInit {
 
   constructor(
-    private tmdb: TmdbService
+    private tmdb: TmdbMovieService
   ) {}
 
   ngOnInit(): void {

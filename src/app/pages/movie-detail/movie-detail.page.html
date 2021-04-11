@@ -43,33 +43,35 @@
       </div>
     </div>
     <div *ngIf="watchProviders$ | async as watchProviders">
-      <h2>Watch on</h2>
+      <div *ngIf="watchProviders.hasAnyProvider()">
+        <h2>Watch on</h2>
         <ion-segment #watchProviderSegment class="ion-margin-bottom" value="flatrate">
-          <ion-segment-button *ngIf="watchProviders.flatrate?.length" value="flatrate">
+          <ion-segment-button *ngIf="watchProviders.hasFlatrateProviders()" value="flatrate">
             <ion-label>Flat</ion-label>
           </ion-segment-button>
-          <ion-segment-button *ngIf="watchProviders.rent?.length" value="rent">
+          <ion-segment-button *ngIf="watchProviders.hasRentProviders()" value="rent">
             <ion-label>Rent</ion-label>
           </ion-segment-button>
-          <ion-segment-button *ngIf="watchProviders.buy?.length" value="buy">
+          <ion-segment-button *ngIf="watchProviders.hasBuyProviders()" value="buy">
             <ion-label>Buy</ion-label>
           </ion-segment-button>
         </ion-segment>
         <div class="d-flex" *ngIf="watchProviderSegment.value === 'flatrate'">
-          <ion-thumbnail class="ion-margin-end" *ngFor="let provider of watchProviders.flatrate">
+          <ion-thumbnail class="ion-margin-end" *ngFor="let provider of watchProviders.flatrateProviders">
             <img [src]="tmdb.getImage(provider.logo_path)">
           </ion-thumbnail>
         </div>
         <div class="d-flex"  *ngIf="watchProviderSegment.value === 'rent'">
-          <ion-thumbnail class="ion-margin-end" *ngFor="let provider of watchProviders.rent">
+          <ion-thumbnail class="ion-margin-end" *ngFor="let provider of watchProviders.rentProviders">
             <img [src]="tmdb.getImage(provider.logo_path)">
           </ion-thumbnail>
         </div>
         <div class="d-flex"  *ngIf="watchProviderSegment.value === 'buy'">
-          <ion-thumbnail class="ion-margin-end" *ngFor="let provider of watchProviders.buy">
+          <ion-thumbnail class="ion-margin-end" *ngFor="let provider of watchProviders.buyProviders">
             <img [src]="tmdb.getImage(provider.logo_path)">
           </ion-thumbnail>
         </div>
+      </div>
     </div>
 
     <div>
@@ -77,7 +79,7 @@
       <div class="h-scroll" *ngIf="recommendedMovies$ | async as recommendedMovies; else loading">
         <ion-row class="ion-nowrap">
           <ion-col class="ws-nowrap txt-small" *ngFor="let movie of recommendedMovies.elements">
-            <ion-card [href]="'movies/' + movie.id">
+            <ion-card [routerLink]="['/movies/', movie.id]">
               <ion-img [src]="movie.poster"></ion-img>
               <ion-card-header>
                 <ion-card-title>{{ movie.title }}</ion-card-title>

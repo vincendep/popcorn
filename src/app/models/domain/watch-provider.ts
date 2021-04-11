@@ -11,8 +11,30 @@ export class WatchProvider {
   }
 }
 
-export interface MovieWatchProviders {
-  rent: Array<WatchProvider>
-  buy: Array<WatchProvider>
-  flatrate: Array<WatchProvider>
+export class MovieWatchProviders {
+  readonly rentProviders: WatchProvider[]
+  readonly buyProviders: WatchProvider[]
+  readonly flatrateProviders: WatchProvider[]
+
+  constructor(rentProviders: WatchProvider[], buyProviders: WatchProvider[], flatrateProviders: WatchProvider[]) {
+    this.rentProviders = rentProviders
+    this.buyProviders = buyProviders
+    this.flatrateProviders = flatrateProviders
+  }
+
+  hasAnyProvider() {
+    return this.hasRentProviders() || this.hasBuyProviders() || this.hasFlatrateProviders()
+  }
+
+  hasRentProviders() {
+    return this.rentProviders?.length > 0
+  }
+
+  hasBuyProviders() {
+    return this.buyProviders?.length > 0
+  }
+
+  hasFlatrateProviders() {
+    return this.flatrateProviders?.length > 0
+  }
 }

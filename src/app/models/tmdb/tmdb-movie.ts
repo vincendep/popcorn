@@ -1,4 +1,4 @@
-import { TmdbService } from "src/app/services/tmdb.service"
+import { TmdbMovieService } from "src/app/services/tmdb/tmdb-movie.service"
 import { Movie } from "../domain/movie"
 
 export class TmdbMovie implements Movie {
@@ -12,9 +12,9 @@ export class TmdbMovie implements Movie {
   private release_date: Date
   readonly runtime: number
   private vote_average: number
-  private tmdb: TmdbService
+  private tmdb: TmdbMovieService
 
-  constructor(object: any, tmdb: TmdbService) {
+  constructor(object: any, tmdb: TmdbMovieService) {
     this.id = object.id
     this.imdb_id = object.imdb_id
     this.backdrop_path = object.backdrop_path

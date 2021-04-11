@@ -10,17 +10,14 @@ export class I18nService {
 
   constructor() {
     this.intl = Intl
+    console.log("I18NService created")
   }
 
-  getLanguage(): Observable<Array<string>> {
-    if (this.isServiceAvailable()) {
-      return of(this.intl.getCanonicalLocales(navigator.language))
-    } else {
-      return of(null)
-    }
+  getLanguage(): Observable<string> {
+    return of(this.intl.getCanonicalLocales(navigator.language))
   }
 
-  private isServiceAvailable(): boolean {
+  isServiceAvailable(): boolean {
     return this.intl && typeof this.intl === 'object'
   }
 }

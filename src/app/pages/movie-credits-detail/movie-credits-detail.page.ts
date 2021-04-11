@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { ModalController } from '@ionic/angular';
-import { TmdbService } from 'src/app/services/tmdb.service';
+import { TmdbMovieService } from 'src/app/services/tmdb/tmdb-movie.service';
 
 @Component({
   selector: 'app-movie-credits-detail',
@@ -14,7 +14,7 @@ export class MovieCreditsDetailPage implements OnInit {
 
   constructor(
     private modalController: ModalController,
-    private tmdb: TmdbService
+    private tmdb: TmdbMovieService
   ) {}
 
   ngOnInit() {}
