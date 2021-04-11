@@ -34,11 +34,11 @@ export class TmdbMovie implements Movie {
   }
 
   public get backdrop() {
-    return new URL(this.tmdb.getImage(this.backdrop_path))
+    return this.tmdb.getImage(this.backdrop_path)
   }
 
   public get poster() {
-    return new URL(this.tmdb.getImage(this.poster_path))
+    return this.tmdb.getImage(this.poster_path)
   }
 
   public get releaseDate() {

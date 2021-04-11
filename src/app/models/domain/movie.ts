@@ -1,11 +1,11 @@
 export interface Movie {
   id: string
   imdbId: string
-  backdrop: URL
+  backdrop: string
   genres: Array<any>
   title: string
   overview: string
-  poster: URL
+  poster: string
   releaseDate: Date
   runtime: number
   voteAverage: number
