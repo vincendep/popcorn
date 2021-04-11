@@ -1,5 +1,3 @@
-import { i18nMetaToJSDoc } from "@angular/compiler/src/render3/view/i18n/meta"
-
 export class Page<T> {
   readonly number: number
   readonly totalPages: number
