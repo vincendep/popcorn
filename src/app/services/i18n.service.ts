@@ -1,24 +1,19 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { BehaviorSubject, Observable, of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class I18nService {
   // TODO fix typescript configuration
+  public language$: Observable<string>
+  private _language: BehaviorSubject<string>
   private intl: any
 
   constructor() {
     this.intl = Intl
-    console.log("I18NService created")
-  }
-
-  getLanguage(): Observable<string> {
-    return of(this.intl.getCanonicalLocales(navigator.language))
-  }
-
-  isServiceAvailable(): boolean {
-    return this.intl && typeof this.intl === 'object'
+    this._language = new BehaviorSubject<string>(this.intl.getCanonicalLocales(navigator.language))
+    this.language$ = this._language.asObservable()
   }
 }
 

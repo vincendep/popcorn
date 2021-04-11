@@ -7,8 +7,8 @@ import { tap, map, filter } from 'rxjs/operators';
 import { MovieCreditsDetailPage } from '../movie-credits-detail/movie-credits-detail.page';
 import { Movie } from 'src/app/models/domain/movie';
 import { Page } from 'src/app/models/page';
-import { MovieWatchProviders, WatchProvider } from 'src/app/models/domain/watch-provider';
-import { TmdbWatchProviderService } from 'src/app/services/tmdb/tmdb-watch-provider.service';
+import { MovieStreamingProviders, StreamingProvider } from 'src/app/models/domain/streaming-provider';
+import { TmdbStreamingProviderService } from 'src/app/services/tmdb/tmdb-streaming-provider.service';
 
 @Component({
   selector: 'app-movie-detail',
@@ -18,7 +18,7 @@ import { TmdbWatchProviderService } from 'src/app/services/tmdb/tmdb-watch-provi
 export class MovieDetailPage implements OnInit {
 
   private movie$: Observable<Movie>
-  private watchProviders$: Observable<MovieWatchProviders>
+  private streamingProviders$: Observable<MovieStreamingProviders>
   private recommendedMovies$: Observable<Page<Movie>>
   private movieCredits$
   private directors
@@ -28,14 +28,14 @@ export class MovieDetailPage implements OnInit {
     private route: ActivatedRoute,
     private modalController: ModalController,
     private movieService: TmdbMovieService,
-    private watchProviderService: TmdbWatchProviderService
+    private watchProviderService: TmdbStreamingProviderService
   ) { }
 
   ngOnInit() {
     const movieId = +this.route.snapshot.paramMap.get("id");
     this.movie$ = this.movieService.getMovieDetails(movieId)
     this.recommendedMovies$ = this.movieService.getMovieRecommendations(movieId)
-    this.watchProviders$ = this.watchProviderService.getMovieWatchProviders(movieId)
+    this.streamingProviders$ = this.watchProviderService.getMovieWatchProviders(movieId)
     this.movieService.getMovieCredits(movieId)
       .pipe(
         tap((credits: any) => this.cast = credits.cast.slice(0, 25)),

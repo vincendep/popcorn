@@ -1,22 +1,22 @@
-export class WatchProvider {
+export class StreamingProvider {
   readonly id: string
   readonly name: string
-  readonly logo: URL
+  readonly logo: string
   readonly displayPriority: number
 
   private constructor() {}
 
   static comparator() {
-    return (wp1: WatchProvider, wp2: WatchProvider) => wp2.displayPriority - wp1.displayPriority
+    return (wp1: StreamingProvider, wp2: StreamingProvider) => wp2.displayPriority - wp1.displayPriority
   }
 }
 
-export class MovieWatchProviders {
-  readonly rentProviders: WatchProvider[]
-  readonly buyProviders: WatchProvider[]
-  readonly flatrateProviders: WatchProvider[]
+export class MovieStreamingProviders {
+  readonly rentProviders: StreamingProvider[]
+  readonly buyProviders: StreamingProvider[]
+  readonly flatrateProviders: StreamingProvider[]
 
-  constructor(rentProviders: WatchProvider[], buyProviders: WatchProvider[], flatrateProviders: WatchProvider[]) {
+  constructor(rentProviders: StreamingProvider[], buyProviders: StreamingProvider[], flatrateProviders: StreamingProvider[]) {
     this.rentProviders = rentProviders
     this.buyProviders = buyProviders
     this.flatrateProviders = flatrateProviders

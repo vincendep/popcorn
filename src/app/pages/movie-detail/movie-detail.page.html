@@ -42,33 +42,33 @@
         <ion-button (click)="showMovieCredits()" expand="full">more info</ion-button>
       </div>
     </div>
-    <div *ngIf="watchProviders$ | async as watchProviders">
-      <div *ngIf="watchProviders.hasAnyProvider()">
+    <div *ngIf="streamingProviders$ | async as streamingProviders">
+      <div *ngIf="streamingProviders.hasAnyProvider()">
         <h2>Watch on</h2>
-        <ion-segment #watchProviderSegment class="ion-margin-bottom" value="flatrate">
-          <ion-segment-button *ngIf="watchProviders.hasFlatrateProviders()" value="flatrate">
+        <ion-segment #streamingProvidersegment class="ion-margin-bottom" value="flatrate">
+          <ion-segment-button *ngIf="streamingProviders.hasFlatrateProviders()" value="flatrate">
             <ion-label>Flat</ion-label>
           </ion-segment-button>
-          <ion-segment-button *ngIf="watchProviders.hasRentProviders()" value="rent">
+          <ion-segment-button *ngIf="streamingProviders.hasRentProviders()" value="rent">
             <ion-label>Rent</ion-label>
           </ion-segment-button>
-          <ion-segment-button *ngIf="watchProviders.hasBuyProviders()" value="buy">
+          <ion-segment-button *ngIf="streamingProviders.hasBuyProviders()" value="buy">
             <ion-label>Buy</ion-label>
           </ion-segment-button>
         </ion-segment>
-        <div class="d-flex" *ngIf="watchProviderSegment.value === 'flatrate'">
-          <ion-thumbnail class="ion-margin-end" *ngFor="let provider of watchProviders.flatrateProviders">
-            <img [src]="tmdb.getImage(provider.logo_path)">
+        <div class="d-flex" *ngIf="streamingProvidersegment.value === 'flatrate'">
+          <ion-thumbnail class="ion-margin-end" *ngFor="let provider of streamingProviders.flatrateProviders">
+            <img [src]="provider.logo">
           </ion-thumbnail>
         </div>
-        <div class="d-flex"  *ngIf="watchProviderSegment.value === 'rent'">
-          <ion-thumbnail class="ion-margin-end" *ngFor="let provider of watchProviders.rentProviders">
-            <img [src]="tmdb.getImage(provider.logo_path)">
+        <div class="d-flex"  *ngIf="streamingProvidersegment.value === 'rent'">
+          <ion-thumbnail class="ion-margin-end" *ngFor="let provider of streamingProviders.rentProviders">
+            <img [src]="provider.logo">
           </ion-thumbnail>
         </div>
-        <div class="d-flex"  *ngIf="watchProviderSegment.value === 'buy'">
-          <ion-thumbnail class="ion-margin-end" *ngFor="let provider of watchProviders.buyProviders">
-            <img [src]="tmdb.getImage(provider.logo_path)">
+        <div class="d-flex"  *ngIf="streamingProvidersegment.value === 'buy'">
+          <ion-thumbnail class="ion-margin-end" *ngFor="let provider of streamingProviders.buyProviders">
+            <img [src]="provider.logo">
           </ion-thumbnail>
         </div>
       </div>
