@@ -12,6 +12,10 @@ const routes: Routes = [
         loadChildren: () => import('../discover/discover.module').then(m => m.DiscoverPageModule)
       },
       {
+        path: 'settings',
+        loadChildren: () => import('../settings/settings.module').then( m => m.SettingsPageModule)
+      },
+      {
         path: 'movies/:id',
         loadChildren: () => import('../movie-detail/movie-detail.module').then( m => m.MovieDetailPageModule)
       },

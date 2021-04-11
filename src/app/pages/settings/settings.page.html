@@ -1,0 +1,31 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Settings</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+    <ion-item>
+      <ion-label>Country</ion-label>
+      <ion-select [value]="country" (ionChange)="selectCountry($event.detail.value)">
+        <ion-select-option value="it">Italia</ion-select-option>
+        <ion-select-option value="us">USA</ion-select-option>
+      </ion-select>
+    </ion-item>
+    <ion-item>
+      <ion-label>Watch Providers</ion-label>
+      <ion-select
+        [value]="streamingProviders"
+        (ionChange)="selectStreamingProviders($event.detail.value)"
+        multiple="true" okText="Okay"
+        cancelText="Dismiss"
+      >
+        <ion-select-option value="netflix">Netflix</ion-select-option>
+        <ion-select-option value="prime-video">Prime Video</ion-select-option>
+        <ion-select-option value="hulu">Hulu</ion-select-option>
+        <ion-select-option value="now">Now</ion-select-option>
+      </ion-select>
+    </ion-item>
+  </ion-list>
+</ion-content>
