@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { StreamingProvider } from '../models/domain/streaming-provider';
+import { StorageService } from './storage.service';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +12,9 @@ export class SettingsService {
   private _streamingProviders: BehaviorSubject<StreamingProvider[]>
   public streamingProviders$: Observable<StreamingProvider[]>
 
-  constructor() {
+  constructor(
+    private storageService: StorageService
+  ) {
     this._country = new BehaviorSubject(localStorage.getItem("settings.country"))
     this.country$ = this._country.asObservable()
     this._streamingProviders = new BehaviorSubject(JSON.parse(localStorage.getItem("settings.streaming-providers")))
@@ -19,12 +22,12 @@ export class SettingsService {
   }
 
   public changeCountry(country: string) {
-    localStorage.setItem("settings.country", country)
+    this.storageService.set("settings.country", country)
     this._country.next(country)
   }
 
   public changeStreamingProviders(streamingProviders: StreamingProvider[]) {
-    localStorage.setItem("settings.streaming-providers", JSON.stringify(streamingProviders))
+    this.storageService.set("settings.streaming-providers", streamingProviders)
     this._streamingProviders.next(streamingProviders)
   }
 }
