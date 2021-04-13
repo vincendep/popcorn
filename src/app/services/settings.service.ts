@@ -15,19 +15,31 @@ export class SettingsService {
   constructor(
     private storageService: StorageService
   ) {
-    this._country = new BehaviorSubject(localStorage.getItem("settings.country"))
-    this.country$ = this._country.asObservable()
-    this._streamingProviders = new BehaviorSubject(JSON.parse(localStorage.getItem("settings.streaming-providers")))
-    this.streamingProviders$ = this._streamingProviders.asObservable()
+    this.init()
+    this.loadData()
   }
 
   public changeCountry(country: string) {
     this.storageService.set("settings.country", country)
-    this._country.next(country)
+      .then(_ => this._country.next(country))
   }
 
   public changeStreamingProviders(streamingProviders: StreamingProvider[]) {
     this.storageService.set("settings.streaming-providers", streamingProviders)
-    this._streamingProviders.next(streamingProviders)
+      .then(_ => this._streamingProviders.next(streamingProviders))
+  }
+
+  private init() {
+    this._country = new BehaviorSubject(null)
+    this.country$ = this._country.asObservable()
+    this._streamingProviders = new BehaviorSubject([])
+    this.streamingProviders$ = this._streamingProviders.asObservable()
+  }
+
+  private loadData() {
+    this.storageService.get("settings.country")
+      .then(country => this._country.next(country || null))
+    this.storageService.get("settings.streaming-providers")
+      .then(sp => this._streamingProviders.next(sp || []))
   }
 }
