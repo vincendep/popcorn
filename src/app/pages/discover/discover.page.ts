@@ -13,6 +13,6 @@ export class DiscoverPage implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.tmdb.getMovieGenresList().subscribe(list => console.log(list))
+    this.tmdb.getMovieGenresList()
   }
 }

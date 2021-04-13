@@ -9,6 +9,7 @@ import { Movie } from 'src/app/models/domain/movie';
 import { Page } from 'src/app/models/page';
 import { MovieStreamingProviders, StreamingProvider } from 'src/app/models/domain/streaming-provider';
 import { TmdbStreamingProviderService } from 'src/app/services/tmdb/tmdb-streaming-provider.service';
+import { LibraryService } from 'src/app/services/library.service';
 
 @Component({
   selector: 'app-movie-detail',
@@ -28,7 +29,8 @@ export class MovieDetailPage implements OnInit {
     private route: ActivatedRoute,
     private modalController: ModalController,
     private movieService: TmdbMovieService,
-    private watchProviderService: TmdbStreamingProviderService
+    private watchProviderService: TmdbStreamingProviderService,
+    private libraryService: LibraryService
   ) { }
 
   ngOnInit() {
@@ -52,5 +54,9 @@ export class MovieDetailPage implements OnInit {
       }
     });
     return await modal.present();
+  }
+
+  addToWatchList(movie: Movie) {
+    this.libraryService.addToWatchList(movie)
   }
 }

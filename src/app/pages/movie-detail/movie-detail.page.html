@@ -13,6 +13,7 @@
       <p>{{ movie.releaseDate | date:'YYYY' }} | {{ movie.runtime }}m | {{ movie.voteAverage | percent }}</p>
     </div>
     <div>
+      <ion-button (click)="addToWatchList(movie)">Add to watch list</ion-button>
       <h2>Overview</h2>
       <p>{{ movie.overview }}</p>
       <div>
