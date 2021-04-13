@@ -56,7 +56,15 @@ export class MovieDetailPage implements OnInit {
     return await modal.present();
   }
 
+  isInWatchList(movie: Movie) {
+    return this.libraryService.isInWatchList(movie)
+  }
+
   addToWatchList(movie: Movie) {
     this.libraryService.addToWatchList(movie)
+  }
+
+  removeFromWatchList(movie: Movie) {
+    this.libraryService.removeFromWatchList(movie.id)
   }
 }

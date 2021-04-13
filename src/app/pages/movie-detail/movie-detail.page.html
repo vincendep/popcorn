@@ -13,7 +13,12 @@
       <p>{{ movie.releaseDate | date:'YYYY' }} | {{ movie.runtime }}m | {{ movie.voteAverage | percent }}</p>
     </div>
     <div>
-      <ion-button (click)="addToWatchList(movie)">Add to watch list</ion-button>
+      <ion-button *ngIf="isInWatchList(movie) | async; else addButton" (click)="removeFromWatchList(movie)">
+        Remove from watch list
+      </ion-button>
+      <ng-template #addButton>
+        <ion-button (click)="addToWatchList(movie)">Add to watch list</ion-button>
+      </ng-template>
       <h2>Overview</h2>
       <p>{{ movie.overview }}</p>
       <div>

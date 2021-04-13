@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 
 import { Storage } from '@ionic/storage-angular';
-import { from, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -9,6 +8,7 @@ import { from, Observable } from 'rxjs';
 export class StorageService {
   private _storage: Storage | null = null;
 
+  // TODO inject at startup
   constructor(private storage: Storage) {
     this.init();
   }
