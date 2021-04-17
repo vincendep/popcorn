@@ -1,27 +1,27 @@
-export interface Movie {
-  id: string
-  imdbId: string
-  backdrop: string
-  genres: Array<any>
-  title: string
-  overview: string
-  poster: string
-  releaseDate: Date
-  runtime: number
-  voteAverage: number
-}
+export class Movie {
+  readonly id: string
+  readonly imdbId: string
+  readonly backdrop: string
+  readonly genres: Array<any>
+  readonly title: string
+  readonly overview: string
+  readonly poster: string
+  readonly releaseDate: Date
+  readonly runtime: number
+  readonly voteAverage: number
 
-export function extractMovie(movie: Movie): Movie {
-  return {
-    id: movie.id,
-    imdbId: movie.imdbId,
-    backdrop: movie.backdrop,
-    genres: movie.genres,
-    title: movie.title,
-    overview: movie.overview,
-    poster: movie.poster,
-    releaseDate: movie.releaseDate,
-    runtime: movie.runtime,
-    voteAverage: movie.voteAverage
+  static from(movie: Movie): Movie {
+    return {
+      id: movie.id,
+      imdbId: movie.imdbId,
+      backdrop: movie.backdrop,
+      genres: movie.genres,
+      title: movie.title,
+      overview: movie.overview,
+      poster: movie.poster,
+      releaseDate: movie.releaseDate,
+      runtime: movie.runtime,
+      voteAverage: movie.voteAverage
+    }
   }
 }

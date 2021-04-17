@@ -9,11 +9,15 @@ import { TmdbService } from './tmdb.service';
 @Injectable({
   providedIn: 'root'
 })
-export class TmdbMovieService extends TmdbService {
+export class TmdbMovieService {
+
+  constructor(
+    private tmdb: TmdbService
+  ) {}
 
   // TODO extract
   discoverMovie(filter: {genres?: string, keywords?: string, watchProviders?: string}) {
-    return this.call('discover/movie', {
+    return this.tmdb.call('discover/movie', {
       with_genres: filter.genres,
       with_keywords: filter.keywords,
       with_watch_providers: filter.watchProviders
@@ -21,30 +25,30 @@ export class TmdbMovieService extends TmdbService {
   }
 
   getMovieCredits(id: Number) {
-    return this.call(`movie/${id}/credits`)
+    return this.tmdb.call(`movie/${id}/credits`)
   }
 
   getMovieDetails(id: Number): Observable<TmdbMovie> {
-    return this.call(`movie/${id}`)
+    return this.tmdb.call<TmdbMovie>(`movie/${id}`)
       .pipe(
-        map(res => new TmdbMovie(res, this)
+        map((movie: TmdbMovie) => new TmdbMovie(this.tmdb, movie)
       )
     )
   }
 
   // TODO extract
   getMovieGenresList() {
-    return this.call('genre/movie/list')
+    return this.tmdb.call('genre/movie/list')
   }
 
   getMovieRecommendations(movieId: number, page: number = 1): Observable<Page<TmdbMovie>> {
-    return this.call(`movie/${movieId}/recommendations`)
+    return this.tmdb.call(`movie/${movieId}/recommendations`)
       .pipe(
         map((res: any) => new Page<TmdbMovie>(
           res.page,
           res.total_pages,
           res.total_results,
-          res.results.map((movie: any) => new TmdbMovie(movie, this)
+          res.results.map((movie: TmdbMovie) => new TmdbMovie(this.tmdb, movie)
           )
         )
       )
@@ -52,7 +56,7 @@ export class TmdbMovieService extends TmdbService {
   }
 
   getMovieVideos(movieId: number) {
-    return this.call(`movie/${movieId}/videos`)
+    return this.tmdb.call(`movie/${movieId}/videos`)
       .pipe(
         map((response: any) => response.results
       )

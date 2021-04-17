@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, from, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { List } from '../models/domain/list';
-import { extractMovie, Movie } from '../models/domain/movie';
+import { Movie } from '../models/domain/movie';
 import { StorageService } from './storage.service';
 
 @Injectable({
@@ -51,7 +51,7 @@ export class LibraryService {
     const list = lists.find(l => l.id === listId)
     if (list) {
       if (!list.movies.find(m => m.id === movie.id)) {
-        list.movies.push(extractMovie(movie))
+        list.movies.push(Movie.from(movie))
         this.storageService.set('library.lists', lists)
           .then(_ => this._lists.next(lists))
       } else {
@@ -86,7 +86,7 @@ export class LibraryService {
   addToWatchList(movie: Movie) {
     const watchlist = this._watchList.getValue()
     if (!watchlist.find(m => m.id === movie.id)) {
-      watchlist.push(extractMovie(movie))
+      watchlist.push(Movie.from(movie))
       this.storageService.set('library.watchlist', watchlist)
         .then(_ => this._watchList.next(watchlist))
     } else {
@@ -117,7 +117,7 @@ export class LibraryService {
   addToLiked(movie: Movie) {
     const liked = this._liked.getValue()
     if (!liked.find(m => m.id === movie.id)) {
-      liked.push(extractMovie(movie))
+      liked.push(Movie.from(movie))
       this.storageService.set('library.liked', liked)
         .then(_ => this._liked.next(liked))
     } else {

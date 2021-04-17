@@ -1,4 +1,4 @@
-import { TmdbMovieService } from "src/app/services/tmdb/tmdb-movie.service"
+import { TmdbService } from "src/app/services/tmdb/tmdb.service"
 import { Movie } from "../domain/movie"
 
 export class TmdbMovie implements Movie {
@@ -12,20 +12,20 @@ export class TmdbMovie implements Movie {
   private release_date: Date
   readonly runtime: number
   private vote_average: number
-  private tmdb: TmdbMovieService
+  private tmdb: TmdbService
 
-  constructor(object: any, tmdb: TmdbMovieService) {
-    this.id = object.id
-    this.imdb_id = object.imdb_id
-    this.backdrop_path = object.backdrop_path
-    this.genres = object.genres
-    this.title = object.title
-    this.overview = object.overview
-    this.poster_path = object.poster_path
-    this.overview = object.overview
-    this.release_date = object.release_date,
-    this.runtime = object.runtime,
-    this.vote_average = object.vote_average
+  constructor(tmdb: TmdbService, tmdbMovie: TmdbMovie) {
+    this.id = tmdbMovie.id
+    this.imdb_id = tmdbMovie.imdb_id
+    this.backdrop_path = tmdbMovie.backdrop_path
+    this.genres = tmdbMovie.genres
+    this.title = tmdbMovie.title
+    this.overview = tmdbMovie.overview
+    this.poster_path = tmdbMovie.poster_path
+    this.overview = tmdbMovie.overview
+    this.release_date = tmdbMovie.release_date,
+    this.runtime = tmdbMovie.runtime,
+    this.vote_average = tmdbMovie.vote_average
     this.tmdb = tmdb
   }
 

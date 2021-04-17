@@ -1,5 +1,4 @@
-import { TmdbMovieService } from "src/app/services/tmdb/tmdb-movie.service";
-import { TmdbStreamingProviderService } from "src/app/services/tmdb/tmdb-streaming-provider.service";
+import { TmdbService } from "src/app/services/tmdb/tmdb.service";
 import { StreamingProvider } from "../domain/streaming-provider";
 
 export class TmdbStreamingProvider implements StreamingProvider {
@@ -8,9 +7,9 @@ export class TmdbStreamingProvider implements StreamingProvider {
   private logo_path: string;
   private display_priority: number;
 
-  private tmdb: TmdbStreamingProviderService
+  private tmdb: TmdbService
 
-  constructor(object: any, tmdb: TmdbStreamingProviderService) {
+  constructor(object: any, tmdb: TmdbService) {
     this.provider_id = object.provider_id
     this.provider_name = object.provider_name
     this.logo_path = object.logo_path

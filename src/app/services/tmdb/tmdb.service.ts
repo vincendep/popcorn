@@ -24,8 +24,8 @@ export class TmdbService {
     return this.imageBaseUrl + "/" + size + path
   }
 
-  protected call(path: string, params?: any) {
-    return this.http.get(this.buildUrl(path), {
+   call<T>(path: string, params?: any) {
+    return this.http.get<T>(this.buildUrl(path), {
       params: {
         api_key: this.apiKey,
         language: this.language,
@@ -34,7 +34,7 @@ export class TmdbService {
     })
   }
 
-  protected buildUrl(path: String) {
+  private buildUrl(path: String) {
     return this.baseUrl + "/" + path
   }
 }
