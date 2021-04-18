@@ -7,27 +7,25 @@ import { StorageService } from './storage.service';
   providedIn: 'root'
 })
 export class SettingsService {
-  public readonly country$: Observable<string>
-  public readonly streamingProviders$: Observable<StreamingProvider[]>
-  private _country: BehaviorSubject<string>
-  private _streamingProviders: BehaviorSubject<StreamingProvider[]>
+  private initialized: Promise<any>
+  private _country: BehaviorSubject<string> = new BehaviorSubject(null)
+  private _streamingProviders: BehaviorSubject<StreamingProvider[]> = new BehaviorSubject([])
+  public readonly country$: Observable<string> = this._country.asObservable()
+  public readonly streamingProviders$: Observable<StreamingProvider[]> = this._streamingProviders.asObservable()
 
-  constructor(
-    private storageService: StorageService
-  ) {
-    this._country = new BehaviorSubject(null)
-    this._streamingProviders = new BehaviorSubject([])
-    this.country$ = this._country.asObservable()
-    this.streamingProviders$ = this._streamingProviders.asObservable()
-    this.loadData()
+
+  constructor(private storageService: StorageService) {
+    this.initialized = this.loadData()
   }
 
   public async changeCountry(country: string) {
+    await this.initialized
     return await this.storageService.set("settings.country", country)
       .then(_ => this._country.next(country))
   }
 
   public async changeStreamingProviders(streamingProviders: StreamingProvider[]) {
+    await this.initialized
     return await this.storageService.set("settings.streaming-providers", streamingProviders)
       .then(_ => this._streamingProviders.next(streamingProviders))
   }
@@ -36,6 +34,6 @@ export class SettingsService {
     const country = await this.storageService.get("settings.country")
     this._country.next(country || null)
     const streamingProviders = await this.storageService.get("settings.streaming-providers")
-    this._streamingProviders.next(streamingProviders)
+    this._streamingProviders.next(streamingProviders || [])
   }
 }
