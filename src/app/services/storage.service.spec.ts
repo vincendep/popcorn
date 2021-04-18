@@ -1,38 +1,11 @@
+import { Storage } from '@ionic/storage';
 import { StorageService } from './storage.service';
 
-fdescribe('StorageService', async () => {
+describe('StorageService', async () => {
   let storageService: StorageService
-  let storageSpy: any
-  let storage: any
 
   beforeEach(() => {
-    storageSpy = jasmine.createSpyObj('Storage', ['get', 'set', 'remove', 'create', 'keys']);
-    storageSpy.get.and.callFake(async (key: string) => {
-      console.log('get fake called')
-      return storage[key]
-    })
-    storageSpy.set.and.callFake(async (key: string, value: any) => {
-      console.log('set fake called')
-      storage[key] = value
-      return storage[key]
-    })
-    storageSpy.remove.and.callFake(async (key: string) => {
-      console.log('remove fake called')
-      storage[key] = undefined
-    })
-    storageSpy.create.and.callFake(async () => {
-      console.log('create fake called')
-      return storageSpy
-    })
-    storageSpy.keys.and.callFake(async () => {
-      console.log('keys fake called')
-      return Object.keys(storage)
-    })
-    storageService = new StorageService(storageSpy)
-  })
-
-  afterEach(() => {
-    storage = {}
+    storageService = new StorageService(new MockStorage({test: "test"}))
   })
 
   it('should be created', () => {
@@ -40,25 +13,52 @@ fdescribe('StorageService', async () => {
   });
 
   it('should return objects', async () => {
-    storage = {test: "test"}
-    const obj = await storageService.get("test")
-    expect(obj).toBeDefined();
+    expect(await storageService.get("test")).toBeDefined();
   });
 
   it('should store objects', async () => {
-    await storageService.set("test", "test")
-    expect(storage.test).toBeDefined()
+    await storageService.set("anotherTest", "anotherTest")
+    expect(await storageService.get("anotherTest")).toBeDefined()
   })
 
   it('should delete objects', async () => {
-    storage = {test: "test"}
     await storageService.remove("test")
-    expect(storage.test).toBeUndefined()
+    expect(await storageService.get("test")).toBeUndefined()
   })
 
   it('should return keys', async () => {
-    storage = {test: "test"}
-    const keys = await storageService.keys()
-    expect(keys).toContain("test")
+    expect(await storageService.keys()).toContain("test")
   })
 });
+
+
+export class MockStorageService extends StorageService {
+  constructor(storage: any = {}) {
+    super(new MockStorage(storage))
+  }
+}
+
+class MockStorage extends Storage {
+  private _storage = {}
+
+  constructor(storage: any) {
+    super()
+    this._storage = storage
+  }
+
+  public async get(key: string) {
+    return this._storage[key]
+  }
+
+  public async set(key: string, value: any) {
+    return this._storage[key] = value
+  }
+
+  public async remove(key: string) {
+    return delete this._storage[key]
+  }
+
+  public async keys() {
+    return Object.keys(this._storage)
+  }
+}

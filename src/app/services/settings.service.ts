@@ -7,39 +7,35 @@ import { StorageService } from './storage.service';
   providedIn: 'root'
 })
 export class SettingsService {
+  public readonly country$: Observable<string>
+  public readonly streamingProviders$: Observable<StreamingProvider[]>
   private _country: BehaviorSubject<string>
-  public country$: Observable<string>
   private _streamingProviders: BehaviorSubject<StreamingProvider[]>
-  public streamingProviders$: Observable<StreamingProvider[]>
 
   constructor(
     private storageService: StorageService
   ) {
-    this.init()
+    this._country = new BehaviorSubject(null)
+    this._streamingProviders = new BehaviorSubject([])
+    this.country$ = this._country.asObservable()
+    this.streamingProviders$ = this._streamingProviders.asObservable()
     this.loadData()
   }
 
-  public changeCountry(country: string) {
-    this.storageService.set("settings.country", country)
+  public async changeCountry(country: string) {
+    return await this.storageService.set("settings.country", country)
       .then(_ => this._country.next(country))
   }
 
-  public changeStreamingProviders(streamingProviders: StreamingProvider[]) {
-    this.storageService.set("settings.streaming-providers", streamingProviders)
+  public async changeStreamingProviders(streamingProviders: StreamingProvider[]) {
+    return await this.storageService.set("settings.streaming-providers", streamingProviders)
       .then(_ => this._streamingProviders.next(streamingProviders))
   }
 
-  private init() {
-    this._country = new BehaviorSubject(null)
-    this.country$ = this._country.asObservable()
-    this._streamingProviders = new BehaviorSubject([])
-    this.streamingProviders$ = this._streamingProviders.asObservable()
-  }
-
-  private loadData() {
-    this.storageService.get("settings.country")
-      .then(country => this._country.next(country || null))
-    this.storageService.get("settings.streaming-providers")
-      .then(sp => this._streamingProviders.next(sp || []))
+  private async loadData() {
+    const country = await this.storageService.get("settings.country")
+    this._country.next(country || null)
+    const streamingProviders = await this.storageService.get("settings.streaming-providers")
+    this._streamingProviders.next(streamingProviders)
   }
 }

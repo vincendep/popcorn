@@ -25,12 +25,12 @@ export class LibraryService {
 
   createList(aList: List): Observable<List> {
     const lists = this._lists.getValue()
-    const list = Object.assign({}, aList)
+    const list: List = Object.assign({}, aList)
     list.id = ((Math.max(...lists.map(l => +l.id)) || 0) + 1).toString()
     lists.push(list)
     return from(this.storageService.set("library.lists", lists)
       .then(_ => this._lists.next(lists))
-      .then(_ => list))
+      .then(_ => list)) as Observable<List>
 
   }
 

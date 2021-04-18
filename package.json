@@ -8,7 +8,7 @@
     "dev": "ionic serve --configuration=development",
     "start": "ng serve",
     "build": "ng build",
-    "test": "ng test",
+    "test": "ng test --source-map=false",
     "lint": "ng lint",
     "e2e": "ng e2e"
   },
