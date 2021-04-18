@@ -6,30 +6,34 @@ import { Storage } from '@ionic/storage-angular';
   providedIn: 'root'
 })
 export class StorageService {
-  private _storage: Storage | null = null;
+  private _storage: Storage = null;
+  private initialized: Promise<any>
 
-  // TODO inject at startup
-  constructor(private storage: Storage) {
-    this.init();
+  constructor(storage: Storage) {
+    this.initialized = this.init(storage);
   }
 
   async get(key: string) {
-    return await this._storage?.get(key)
+    await this.initialized
+    return await this._storage.get(key)
   }
 
   async set(key: string, value: any){
-    return await this._storage?.set(key, value);
+    await this.initialized
+    return await this._storage.set(key, value);
   }
 
   async remove(key: string){
-    return await this._storage?.remove(key);
+    await this.initialized
+    return await this._storage.remove(key);
   }
 
   async keys() {
-    return await this._storage?.keys()
+    await this.initialized
+    return await this._storage.keys()
   }
 
-  private async init() {
-    this._storage = await this.storage.create();
+  private async init(storage: Storage) {
+    this._storage = await storage.create();
   }
 }
