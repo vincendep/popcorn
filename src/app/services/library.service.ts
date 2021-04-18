@@ -9,18 +9,16 @@ import { StorageService } from './storage.service';
   providedIn: 'root'
 })
 export class LibraryService {
-  public lists$: Observable<List[]>
-  public liked$: Observable<Movie[]>
-  public watchList$: Observable<Movie[]>
-  private _lists: BehaviorSubject<List[]>
-  private _liked: BehaviorSubject<Movie[]>
-  private _watchList: BehaviorSubject<Movie[]>
+  private _lists: BehaviorSubject<List[]> = new BehaviorSubject([])
+  private _liked: BehaviorSubject<Movie[]> = new BehaviorSubject([])
+  private _watchList: BehaviorSubject<Movie[]> = new BehaviorSubject([])
 
-  constructor(
-    private storageService: StorageService
-  ) {
+  public readonly lists$: Observable<List[]> = this._lists.asObservable()
+  public readonly liked$: Observable<Movie[]> = this._liked.asObservable()
+  public readonly  watchList$: Observable<Movie[]> = this._watchList.asObservable()
+
+  constructor(private storageService: StorageService) {
     this.init()
-    this.loadData()
   }
 
   createList(aList: List): Observable<List> {
@@ -146,15 +144,6 @@ export class LibraryService {
   }
 
   private init() {
-    this._lists = new BehaviorSubject([])
-    this.lists$ = this._lists.asObservable()
-    this._watchList = new BehaviorSubject([])
-    this.watchList$ = this._watchList.asObservable()
-    this._liked = new BehaviorSubject([])
-    this.liked$ = this._liked.asObservable()
-  }
-
-  private loadData() {
     this.storageService.get("library.lists")
       .then(lists => this._lists.next(lists || []))
     this.storageService.get("library.watchlist")
