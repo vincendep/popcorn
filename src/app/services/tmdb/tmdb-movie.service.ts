@@ -24,11 +24,11 @@ export class TmdbMovieService {
     })
   }
 
-  getMovieCredits(id: Number) {
+  getMovieCredits(id: number) {
     return this.tmdb.call(`movie/${id}/credits`)
   }
 
-  getMovieDetails(id: Number): Observable<TmdbMovie> {
+  getMovieDetails(id: number): Observable<TmdbMovie> {
     return this.tmdb.call<TmdbMovie>(`movie/${id}`)
       .pipe(
         map((movie: TmdbMovie) => new TmdbMovie(this.tmdb, movie)
