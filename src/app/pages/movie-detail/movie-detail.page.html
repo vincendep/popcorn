@@ -6,19 +6,25 @@
 
 <ion-content>
   <div *ngIf="movie$ | async as movie; else loading">
-    <!-- add image placeholder-->
     <ion-img [src]="movie.backdrop"></ion-img>
+    <div>
+      <ion-row class="ion-justify-content-center">
+        <ion-col size="auto">
+          <ion-icon class="txt-xxlarge" (click)="toggleWatchList(movie)" [name]="isInWatchList ? 'glasses' : 'glasses-outline'"></ion-icon>
+        </ion-col>
+        <ion-col size="auto">
+          <ion-icon class="txt-xxlarge" (click)="toggleLike(movie)" [name]="isLiked ? 'thumbs-up' : 'thumbs-up-outline'"></ion-icon>
+        </ion-col>
+        <ion-col size="auto">
+          <ion-icon class="txt-xxlarge" (click)="toggleDislike(movie)"  [name]="isDisliked ? 'thumbs-down' : 'thumbs-down-outline'"></ion-icon>
+        </ion-col>
+      </ion-row>
+    </div>
     <div>
       <h1>{{ movie.title }}</h1>
       <p>{{ movie.releaseDate | date:'YYYY' }} | {{ movie.runtime }}m | {{ movie.voteAverage | percent }}</p>
     </div>
     <div>
-      <ion-button *ngIf="isInWatchList(movie) | async; else addButton" (click)="removeFromWatchList(movie)">
-        Remove from watch list
-      </ion-button>
-      <ng-template #addButton>
-        <ion-button (click)="addToWatchList(movie)">Add to watch list</ion-button>
-      </ng-template>
       <h2>Overview</h2>
       <p>{{ movie.overview }}</p>
       <div>
