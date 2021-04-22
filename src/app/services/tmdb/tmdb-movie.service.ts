@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
+import { Movie } from 'src/app/models/domain/movie';
 
-import { Page } from '../../models/page';
+import { Page } from '../../models/common/page';
 import { TmdbMovie } from '../../models/tmdb/tmdb-movie';
 import { TmdbService } from './tmdb.service';
 
@@ -16,12 +17,8 @@ export class TmdbMovieService {
   ) {}
 
   // TODO extract
-  discoverMovie(filter: {genres?: string, keywords?: string, watchProviders?: string}) {
-    return this.tmdb.call('discover/movie', {
-      with_genres: filter.genres,
-      with_keywords: filter.keywords,
-      with_watch_providers: filter.watchProviders
-    })
+  getMovieGenresList() {
+    return this.tmdb.call('genre/movie/list')
   }
 
   getMovieCredits(id: number) {
@@ -36,13 +33,8 @@ export class TmdbMovieService {
     )
   }
 
-  // TODO extract
-  getMovieGenresList() {
-    return this.tmdb.call('genre/movie/list')
-  }
-
   getMovieRecommendations(movieId: number, page: number = 1): Observable<Page<TmdbMovie>> {
-    return this.tmdb.call(`movie/${movieId}/recommendations`)
+    return this.tmdb.call(`movie/${movieId}/recommendations`, { 'page': page })
       .pipe(
         map((res: any) => new Page<TmdbMovie>(
           res.page,
@@ -59,6 +51,32 @@ export class TmdbMovieService {
     return this.tmdb.call(`movie/${movieId}/videos`)
       .pipe(
         map((response: any) => response.results
+      )
+    )
+  }
+
+  getPopularMovies(page: number = 1) {
+    return this.tmdb.call('movie/popular', { 'page': page })
+      .pipe(
+        map((res: any) => new Page<Movie>(
+          res.page,
+          res.total_pages,
+          res.total_results,
+          res.results.map((movie: TmdbMovie) => new TmdbMovie(this.tmdb, movie))
+        )
+      )
+    )
+  }
+
+  getTrendingMovies(timeWindow: 'day' | 'week' = 'day', page: number = 1) {
+    return this.tmdb.call(`trending/movie/${timeWindow}`, { 'page': page })
+      .pipe(
+        map((res: any) => new Page<Movie>(
+          res.page,
+          res.total_pages,
+          res.total_results,
+          res.results.map((movie: TmdbMovie) => new TmdbMovie(this.tmdb, movie))
+        )
       )
     )
   }

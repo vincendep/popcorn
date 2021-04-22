@@ -6,7 +6,7 @@ import { BehaviorSubject, Observable, of, Subject, Subscription } from 'rxjs';
 import { tap, map, filter, take, takeUntil } from 'rxjs/operators';
 import { MovieCreditsDetailPage } from '../movie-credits-detail/movie-credits-detail.page';
 import { Movie } from 'src/app/models/domain/movie';
-import { Page } from 'src/app/models/page';
+import { Page } from 'src/app/models/common/page';
 import { MovieStreamingProviders, StreamingProvider } from 'src/app/models/domain/streaming-provider';
 import { TmdbStreamingProviderService } from 'src/app/services/tmdb/tmdb-streaming-provider.service';
 import { LibraryService } from 'src/app/services/library.service';
