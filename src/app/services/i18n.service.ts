@@ -6,14 +6,8 @@ import { BehaviorSubject, Observable, of } from 'rxjs';
 })
 export class I18nService {
   // TODO fix typescript configuration
-  public language$: Observable<string>
-  private _language: BehaviorSubject<string>
-  private intl: any
-
-  constructor() {
-    this.intl = Intl
-    this._language = new BehaviorSubject<string>(this.intl.getCanonicalLocales(navigator.language))
-    this.language$ = this._language.asObservable()
-  }
+  private intl: any = Intl
+  private _language: BehaviorSubject<string> = new BehaviorSubject<string>(this.intl.getCanonicalLocales(navigator.language))
+  public language$: Observable<string> = this._language.asObservable()
 }
 

@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { TmdbStreamingProviderService } from './tmdb-streaming-provider.service';
+import { TmdbWatchProviderService } from './tmdb-watch-provider.service';
 
 describe('WatchProviderServiceService', () => {
-  let service: TmdbStreamingProviderService;
+  let service: TmdbWatchProviderService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(TmdbStreamingProviderService);
+    service = TestBed.inject(TmdbWatchProviderService);
   });
 
   it('should be created', () => {

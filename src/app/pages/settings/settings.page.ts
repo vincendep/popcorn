@@ -1,7 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Observable, of, Subject } from 'rxjs';
-import { takeUntil, tap } from 'rxjs/operators';
-import { StreamingProvider } from 'src/app/models/domain/streaming-provider';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import { Country } from 'src/app/models/domain/country';
+import { WatchProvider } from 'src/app/models/domain/watch-provider';
 import { SettingsService } from 'src/app/services/settings.service';
 
 @Component({
@@ -11,8 +12,10 @@ import { SettingsService } from 'src/app/services/settings.service';
 })
 export class SettingsPage implements OnInit, OnDestroy {
 
-  private country: string
-  private streamingProviders: StreamingProvider[]
+  protected supportedCountries: Country[]
+  protected selectedCountry: string
+  protected supportedWatchProviders: WatchProvider[]
+  protected selectedStreamingProviders: string[]
   private _done: Subject<boolean> = new Subject()
 
   constructor(
@@ -20,12 +23,18 @@ export class SettingsPage implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    this.settingsService.country$
+    this.settingsService.supportedCountries$
       .pipe(takeUntil(this._done))
-      .subscribe(country => this.country = country)
-    this.settingsService.streamingProviders$
+      .subscribe(countries => this.supportedCountries = countries)
+    this.settingsService.selectedCountry$
       .pipe(takeUntil(this._done))
-      .subscribe(providers => this.streamingProviders = providers)
+      .subscribe(country => this.selectedCountry = country?.alpha2)
+    this.settingsService.supportedWatchProviders$
+      .pipe(takeUntil(this._done))
+      .subscribe(providers => this.supportedWatchProviders = providers)
+    this.settingsService.selectedWatchProviders$
+      .pipe(takeUntil(this._done))
+      .subscribe(providers => this.selectedStreamingProviders = providers.map(p => p.id))
   }
 
   ngOnDestroy() {
@@ -33,11 +42,13 @@ export class SettingsPage implements OnInit, OnDestroy {
     this._done.complete()
   }
 
-  selectCountry(country: string) {
-    this.settingsService.changeCountry(country)
+  selectCountry(countryCode: string) {
+    this.settingsService.changeCountry(this.supportedCountries.find(c =>
+      c.alpha2 === countryCode))
   }
 
-  selectStreamingProviders(providers: StreamingProvider[]) {
-    this.settingsService.changeStreamingProviders(providers)
+  selectWatchProviders(providerIds: string[]) {
+    this.settingsService.changeWatchProviders(this.supportedWatchProviders.filter(p =>
+      providerIds.includes(p.id)))
   }
 }

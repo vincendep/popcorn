@@ -1,39 +1,85 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { StreamingProvider } from '../models/domain/streaming-provider';
+import { BehaviorSubject } from 'rxjs';
+import { tap } from 'rxjs/operators';
+import { Country } from '../models/domain/country';
+import { WatchProvider } from '../models/domain/watch-provider';
 import { StorageService } from './storage.service';
+import { TmdbWatchProviderService } from './tmdb/tmdb-watch-provider.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SettingsService {
-  private initialized: Promise<any>
-  private _country: BehaviorSubject<string> = new BehaviorSubject(null)
-  private _streamingProviders: BehaviorSubject<StreamingProvider[]> = new BehaviorSubject([])
-  public readonly country$: Observable<string> = this._country.asObservable()
-  public readonly streamingProviders$: Observable<StreamingProvider[]> = this._streamingProviders.asObservable()
+  private _supportedCountries = new BehaviorSubject<Country[]>([])
+  public readonly supportedCountries$ = this._supportedCountries.asObservable();
+  private _supportedWatchProviders = new BehaviorSubject<WatchProvider[]>([]);
+  public readonly supportedWatchProviders$ = this._supportedWatchProviders.asObservable();
+  private _selectedCountry = new BehaviorSubject<Country>(null)
+  public readonly selectedCountry$ = this._selectedCountry.asObservable()
+  private _selectedWatchProviders = new BehaviorSubject<WatchProvider[]>([])
+  public readonly selectedWatchProviders$ = this._selectedWatchProviders.asObservable();
 
-
-  constructor(private storageService: StorageService) {
-    this.initialized = this.loadData()
+  constructor(
+    private storageService: StorageService,
+    private watchProviderService: TmdbWatchProviderService
+  ) {
+    this.init();
   }
 
-  public async changeCountry(country: string) {
-    await this.initialized
-    return await this.storageService.set("settings.country", country)
-      .then(_ => this._country.next(country))
+  public async changeCountry(country: Country) {
+    return this.storageService.set("settings.country", country?.alpha2)
+      .then(_ =>
+        this._selectedCountry.next(country))
+      .then(_ =>
+        this.watchProviderService.getWatchProviders(this._selectedCountry.getValue()).toPromise())
+      .then(providers =>
+        this._supportedWatchProviders.next(providers))
+      .then(_ =>
+        this._selectedWatchProviders.next(this._selectedWatchProviders.getValue().filter(wp =>
+          this._supportedWatchProviders.getValue().some(swp =>
+            swp.id == wp.id))))
   }
 
-  public async changeStreamingProviders(streamingProviders: StreamingProvider[]) {
-    await this.initialized
-    return await this.storageService.set("settings.streaming-providers", streamingProviders)
-      .then(_ => this._streamingProviders.next(streamingProviders))
+  public async removeWatchProvider(watchProviderId: string) {
+    const selectedWatchProviders = this._selectedWatchProviders.getValue()
+    const watchProvider = selectedWatchProviders.find(wp => wp.id == watchProviderId)
+    if (watchProvider) {
+      selectedWatchProviders.splice(selectedWatchProviders.indexOf(watchProvider), 1)
+      this.changeWatchProviders(selectedWatchProviders)
+    } else {
+      throw `Cannot remove WatchProvider with id ${watchProviderId}`
+    }
   }
 
-  private async loadData() {
-    const country = await this.storageService.get("settings.country")
-    this._country.next(country || null)
-    const streamingProviders = await this.storageService.get("settings.streaming-providers")
-    this._streamingProviders.next(streamingProviders || [])
+  public async addWatchProvider(watchProvider: WatchProvider) {
+    const selectedWatchProviders = this._selectedWatchProviders.getValue()
+    if (! selectedWatchProviders.some(wp => wp.id == watchProvider.id)) {
+      selectedWatchProviders.push(watchProvider)
+      this.changeWatchProviders(selectedWatchProviders)
+    } else {
+      throw `Cannot add WatchProvider with id ${watchProvider.id}`
+    }
+  }
+
+  public async changeWatchProviders(watchProviders: WatchProvider[]) {
+    return this.storageService.set("settings.watch-providers", watchProviders.map(p => p.id))
+      .then(_ => this._selectedWatchProviders.next(watchProviders))
+  }
+
+  private init() {
+    this._supportedCountries.next([Country.DE, Country.ES, Country.FR, Country.IT, Country.US])
+    this.storageService.get('settings.country')
+    .then(countryCode =>
+      this._selectedCountry.next(this._supportedCountries.getValue().find(c =>
+        c.alpha2 == countryCode)))
+    .then(_ =>
+      this.watchProviderService.getWatchProviders(this._selectedCountry.getValue()).toPromise())
+    .then(providers =>
+      this._supportedWatchProviders.next(providers))
+    .then(_ =>
+      this.storageService.get('settings.watch-providers'))
+    .then(providerIds =>
+      this._selectedWatchProviders.next(this._supportedWatchProviders.getValue().filter(wp =>
+        (providerIds || []).includes(wp.id))))
   }
 }

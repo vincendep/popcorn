@@ -1,7 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable, OnDestroy, OnInit } from '@angular/core';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { I18nService } from '../i18n.service';
 
@@ -14,9 +12,7 @@ export class TmdbService {
   protected imageBaseUrl = "https://image.tmdb.org/t/p"
   protected language: string
 
-  constructor(
-    private i18n: I18nService,
-    protected http: HttpClient) {
+  constructor(private i18n: I18nService, protected http: HttpClient) {
     this.i18n.language$.subscribe(language => this.language = language)
   }
 
@@ -24,7 +20,7 @@ export class TmdbService {
     return this.imageBaseUrl + "/" + size + path
   }
 
-   call<T>(path: string, params?: any) {
+  call<T>(path: string, params?: any) {
     return this.http.get<T>(this.buildUrl(path), {
       params: {
         api_key: this.apiKey,

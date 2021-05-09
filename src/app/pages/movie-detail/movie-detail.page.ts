@@ -2,15 +2,14 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { AlertController, ModalController } from '@ionic/angular';
 import { TmdbMovieService } from 'src/app/services/tmdb/tmdb-movie.service';
-import { BehaviorSubject, Observable, of, Subject, Subscription } from 'rxjs';
+import { Observable, of, Subject, Subscription } from 'rxjs';
 import { tap, map, filter, take, takeUntil } from 'rxjs/operators';
 import { MovieCreditsDetailPage } from '../movie-credits-detail/movie-credits-detail.page';
 import { Movie } from 'src/app/models/domain/movie';
 import { Page } from 'src/app/models/common/page';
-import { MovieStreamingProviders, StreamingProvider } from 'src/app/models/domain/streaming-provider';
-import { TmdbStreamingProviderService } from 'src/app/services/tmdb/tmdb-streaming-provider.service';
+import { MovieWatchAvailability, WatchProvider } from 'src/app/models/domain/watch-provider';
 import { LibraryService } from 'src/app/services/library.service';
-import { List } from 'src/app/models/domain/list';
+import { MovieList } from 'src/app/models/domain/list';
 
 @Component({
   selector: 'app-movie-detail',
@@ -19,13 +18,13 @@ import { List } from 'src/app/models/domain/list';
 })
 export class MovieDetailPage implements OnInit, OnDestroy {
 
-  private movie$: Observable<Movie>
+  protected movie$: Observable<Movie>
   private isLiked: boolean;
   private isDisliked: boolean;
   private isInWatchList: boolean;
-  private streamingProviders$: Observable<MovieStreamingProviders>
-  private recommendedMovies$: Observable<Page<Movie>>
-  private movieCredits$
+  protected streamingProviders$: Observable<MovieWatchAvailability>
+  protected recommendedMovies$: Observable<Page<Movie>>
+  protected movieCredits$
   private directors
   private cast
   private done$ = new Subject();
@@ -35,7 +34,6 @@ export class MovieDetailPage implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private modalController: ModalController,
     private movieService: TmdbMovieService,
-    private watchProviderService: TmdbStreamingProviderService,
     private libraryService: LibraryService
   ) { }
 
@@ -43,7 +41,7 @@ export class MovieDetailPage implements OnInit, OnDestroy {
     const movieId = this.route.snapshot.paramMap.get("id");
     this.movie$ = this.movieService.getMovieDetails(+movieId)
     this.recommendedMovies$ = this.movieService.getMovieRecommendations(+movieId)
-    this.streamingProviders$ = this.watchProviderService.getMovieWatchProviders(+movieId)
+    this.streamingProviders$ = this.movieService.getMovieWatchProviders(+movieId)
     this.movieService.getMovieCredits(+movieId)
       .pipe(
         takeUntil(this.done$),
@@ -140,6 +138,6 @@ export class MovieDetailPage implements OnInit, OnDestroy {
       ]
     });
     alert.present();
-    return await alert.onDidDismiss<List>().then(event => event.data)
+    return await alert.onDidDismiss<MovieList>().then(event => event.data)
   }
 }

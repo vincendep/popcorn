@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, from, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { List } from '../models/domain/list';
+import { MovieList } from '../models/domain/list';
 import { Movie } from '../models/domain/movie';
 import { StorageService } from './storage.service';
 
@@ -9,12 +9,12 @@ import { StorageService } from './storage.service';
   providedIn: 'root'
 })
 export class LibraryService {
-  private _lists: BehaviorSubject<List[]> = new BehaviorSubject([])
+  private _lists: BehaviorSubject<MovieList[]> = new BehaviorSubject([])
   private _liked: BehaviorSubject<Movie[]> = new BehaviorSubject([])
   private _disliked: BehaviorSubject<Movie[]> = new BehaviorSubject([])
   private _watchList: BehaviorSubject<Movie[]> = new BehaviorSubject([])
 
-  public readonly lists$: Observable<List[]> = this._lists.asObservable()
+  public readonly lists$: Observable<MovieList[]> = this._lists.asObservable()
   public readonly liked$: Observable<Movie[]> = this._liked.asObservable()
   public readonly disliked$: Observable<Movie[]> = this._disliked.asObservable()
   public readonly  watchList$: Observable<Movie[]> = this._watchList.asObservable()
@@ -23,15 +23,14 @@ export class LibraryService {
     this.init()
   }
 
-  async createList(aList: List) {
+  async createList(aList: MovieList) {
     const lists = this._lists.getValue()
-    const list: List = Object.assign({}, aList)
+    const list: MovieList = Object.assign({}, aList)
     list.id = ((Math.max(...lists.map(l => +l.id)) || 0) + 1).toString()
     lists.push(list)
     return this.storageService.set("library.lists", lists)
       .then(_ => this._lists.next(lists))
       .then(_ => list)
-
   }
 
   deleteList(listId: string) {
@@ -75,7 +74,7 @@ export class LibraryService {
     }
   }
 
-  getListsEnclosedIn(movie: Movie): Observable<List[]> {
+  getListsEnclosedIn(movie: Movie): Observable<MovieList[]> {
     return this._lists
       .asObservable()
       .pipe(
@@ -116,7 +115,7 @@ export class LibraryService {
 
   async addToLiked(movie: Movie) {
     const liked = this._liked.getValue()
-    if (!liked.find(m => m.id == movie.id)) {
+    if (!liked.some(m => m.id == movie.id)) {
       const wasDisliked = this._disliked.getValue().some(m => m.id == movie.id)
       if (wasDisliked) {
         await this.removeFromDisliked(movie.id)

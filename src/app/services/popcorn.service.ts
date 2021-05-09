@@ -4,7 +4,7 @@ import { LibraryService } from './library.service';
 import { SettingsService } from './settings.service';
 import { TmdbDiscoverService } from './tmdb/tmdb-discover.service';
 import { TmdbMovieService } from './tmdb/tmdb-movie.service';
-import { TmdbStreamingProviderService } from './tmdb/tmdb-streaming-provider.service';
+import { TmdbWatchProviderService } from './tmdb/tmdb-watch-provider.service';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +14,7 @@ export class PopcornService {
   constructor(
     private _discoverService: TmdbDiscoverService,
     private _movieService: TmdbMovieService,
-    private _streamingProviderService: TmdbStreamingProviderService,
+    private _watchProviderService: TmdbWatchProviderService,
     private _libraryService: LibraryService,
     private _settingsService: SettingsService,
     private _i18nService: I18nService
@@ -28,8 +28,8 @@ export class PopcornService {
     return this._movieService
   }
 
-  get streamingProviderService() {
-    return this._streamingProviderService
+  get watchProviderService() {
+    return this._watchProviderService
   }
 
   get libraryService() {

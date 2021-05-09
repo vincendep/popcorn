@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
-import { Movie } from 'src/app/models/domain/movie';
+import { MovieWatchAvailability } from 'src/app/models/domain/watch-provider';
+import { TmdbWatchProvider } from 'src/app/models/tmdb/tmdb-streaming-provider';
 
 import { Page } from '../../models/common/page';
 import { TmdbMovie } from '../../models/tmdb/tmdb-movie';
@@ -55,27 +56,17 @@ export class TmdbMovieService {
     )
   }
 
-  getPopularMovies(page: number = 1) {
-    return this.tmdb.call('movie/popular', { 'page': page })
-      .pipe(
-        map((res: any) => new Page<Movie>(
-          res.page,
-          res.total_pages,
-          res.total_results,
-          res.results.map((movie: TmdbMovie) => new TmdbMovie(this.tmdb, movie))
-        )
-      )
-    )
-  }
-
-  getTrendingMovies(timeWindow: 'day' | 'week' = 'day', page: number = 1) {
-    return this.tmdb.call(`trending/movie/${timeWindow}`, { 'page': page })
-      .pipe(
-        map((res: any) => new Page<Movie>(
-          res.page,
-          res.total_pages,
-          res.total_results,
-          res.results.map((movie: TmdbMovie) => new TmdbMovie(this.tmdb, movie))
+  // TODO localization service for watch providers
+  getMovieWatchProviders(movieId: Number, countryId: string = "IT"): Observable<MovieWatchAvailability> {
+    return this.tmdb.call(`movie/${movieId}/watch/providers`).pipe(
+      map((response: any) => response.results[countryId]),
+      map((results: any) => new MovieWatchAvailability(
+        results?.rent?.map(provider =>
+            new TmdbWatchProvider(provider, this.tmdb)) || [],
+        results?.flatrate?.map(provider =>
+            new TmdbWatchProvider(provider, this.tmdb)) || [],
+        results?.buy?.map(provider =>
+            new TmdbWatchProvider(provider, this.tmdb)) || []
         )
       )
     )

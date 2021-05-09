@@ -8,23 +8,33 @@
   <ion-list>
     <ion-item>
       <ion-label>Country</ion-label>
-      <ion-select [value]="country" (ionChange)="selectCountry($event.detail.value)">
-        <ion-select-option value="it">Italia</ion-select-option>
-        <ion-select-option value="us">USA</ion-select-option>
+      <ion-select
+        [value]="selectedCountry"
+        (ionChange)="selectCountry($event.detail.value)"
+      >
+        <ion-select-option
+          *ngFor="let country of supportedCountries"
+          [value]="country.alpha2"
+        >
+            {{ country.name }}
+        </ion-select-option>
       </ion-select>
     </ion-item>
     <ion-item>
       <ion-label>Watch Providers</ion-label>
       <ion-select
-        [value]="streamingProviders"
-        (ionChange)="selectStreamingProviders($event.detail.value)"
-        multiple="true" okText="Okay"
+        [value]="selectedWatchProviders"
+        (ionChange)="selectWatchProviders($event.detail.value)"
+        multiple="true"
+        okText="Okay"
         cancelText="Dismiss"
       >
-        <ion-select-option value="netflix">Netflix</ion-select-option>
-        <ion-select-option value="prime-video">Prime Video</ion-select-option>
-        <ion-select-option value="hulu">Hulu</ion-select-option>
-        <ion-select-option value="now">Now</ion-select-option>
+        <ion-select-option
+          *ngFor="let provider of supportedWatchProviders"
+          [value]="provider.id"
+        >
+          {{ provider.name }}
+        </ion-select-option>
       </ion-select>
     </ion-item>
   </ion-list>

@@ -1,7 +1,7 @@
 import { TmdbService } from "src/app/services/tmdb/tmdb.service";
-import { StreamingProvider } from "../domain/streaming-provider";
+import { WatchProvider } from "../domain/watch-provider";
 
-export class TmdbStreamingProvider implements StreamingProvider {
+export class TmdbWatchProvider implements WatchProvider {
   private provider_id: string;
   private provider_name: string;
   private logo_path: string;

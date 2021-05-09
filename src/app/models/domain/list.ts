@@ -1,8 +1,9 @@
 import { Movie } from "./movie";
 
-export interface List {
+export interface MovieList {
   id: string
   name: string
   description: string
+  backdrop: string
   movies: Movie[]
 }

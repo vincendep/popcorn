@@ -7,5 +7,20 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
-
+  <div>
+    <h2>Trending</h2>
+    <ion-row>
+      <div *ngFor="let movie of trendingMovies">
+        {{ movie.title }}
+      </div>
+    </ion-row>
+  </div>
+  <div>
+    <h2>Popular</h2>
+    <ion-row>
+      <div *ngFor="let movie of popularMovies">
+        {{ movie.title }}
+      </div>
+    </ion-row>
+  </div>
 </ion-content>

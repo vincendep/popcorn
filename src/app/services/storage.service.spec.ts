@@ -1,7 +1,7 @@
 import { Storage } from '@ionic/storage';
 import { StorageService } from './storage.service';
 
-describe('StorageService', async () => {
+fdescribe('StorageService', async () => {
   let storageService: StorageService
 
   beforeEach(() => {
@@ -30,7 +30,6 @@ describe('StorageService', async () => {
     expect(await storageService.keys()).toContain("test")
   })
 });
-
 
 export class MockStorageService extends StorageService {
   constructor(storage: any = {}) {
