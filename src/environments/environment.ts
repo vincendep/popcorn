@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  TMDB_API_KEY: null
+  TMDB_ACCESS_TOKEN: null
 };
 
 /*

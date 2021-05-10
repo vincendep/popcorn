@@ -7,7 +7,7 @@ import { I18nService } from '../i18n.service';
   providedIn: 'root'
 })
 export class TmdbService {
-  protected apiKey = environment.TMDB_API_KEY
+  protected accessToken = environment.TMDB_ACCESS_TOKEN
   protected baseUrl = "https://api.themoviedb.org/3"
   protected imageBaseUrl = "https://image.tmdb.org/t/p"
   protected language: string
@@ -22,8 +22,10 @@ export class TmdbService {
 
   call<T>(path: string, params?: any) {
     return this.http.get<T>(this.buildUrl(path), {
+      headers: {
+        Authorization: `Bearer ${this.accessToken}`
+      },
       params: {
-        api_key: this.apiKey,
         language: this.language,
         ...params
       }
